@@ -147,33 +147,11 @@
     <div id="CartContainer"></div>
   </div>
   <div id="PageContainer" class="is-moved-by-drawer">
+
+    {% comment %}
     <header class="site-header" role="banner">
       <div class="wrapper">
-
         <div class="grid--full grid--table">
-          <div class="grid__item large--one-half">
-            {% comment %}
-              Use the uploaded logo from theme settings if enabled.
-              Site name gets precedence with H1 tag on homepage, div on other pages.
-            {% endcomment %}
-            {% if template == 'index' %}
-              <h1 class="site-header__logo large--left" itemscope itemtype="http://schema.org/Organization">
-            {% else %}
-              <div class="h1 site-header__logo large--left" itemscope itemtype="http://schema.org/Organization">
-            {% endif %}
-              {% if settings.logo_use_image %}
-                <a href="/" itemprop="url" class="site-header__logo-link">
-                  <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}" itemprop="logo">
-                </a>
-              {% else %}
-                <a href="/" itemprop="url">{{ shop.name }}</a>
-              {% endif %}
-            {% if template == 'index' %}
-              </h1>
-            {% else %}
-              </div>
-            {% endif %}
-          </div>
           <div class="grid__item large--one-half large--text-right medium-down--hide">
             {% comment %}
               Show number of items in the cart and total cost in the /cart link
@@ -215,17 +193,43 @@
               </div>
             {% endif %}
 
-            <div class="site-header__search">
-              {% include 'search-bar' %}
-            </div>
+            {% comment %}
+              <div class="site-header__search">
+                {% include 'search-bar' %}
+              </div>
+            {% endcomment %}
           </div>
         </div>
 
       </div>
     </header>
+    {% endcomment %}
 
     <nav class="nav-bar" role="navigation">
       <div class="wrapper">
+        <div class="grid__item large--one-half medium-down--hide">
+          {% comment %}
+            Use the uploaded logo from theme settings if enabled.
+            Site name gets precedence with H1 tag on homepage, div on other pages.
+          {% endcomment %}
+          {% if template == 'index' %}
+            <h1 class="site-header__logo large--left" itemscope itemtype="http://schema.org/Organization">
+          {% else %}
+            <div class="h1 site-header__logo large--left" itemscope itemtype="http://schema.org/Organization">
+          {% endif %}
+            {% if settings.logo_use_image %}
+              <a href="/" itemprop="url" class="site-header__logo-link">
+                <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}" itemprop="logo">
+              </a>
+            {% else %}
+              <a href="/" itemprop="url">{{ shop.name }}</a>
+            {% endif %}
+          {% if template == 'index' %}
+            </h1>
+          {% else %}
+            </div>
+          {% endif %}
+        </div>
         <div class="medium-down--hide">
           {% comment %}
             List out your main-menu linklist (default)

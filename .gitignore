@@ -45,3 +45,11 @@ grunt-config.json
 config.yml
 /_site
 assets/logo.png
+
+# Fonts #
+######################
+/dev/fonts/
+*.eot
+*.woff
+*.woff2
+*.ttf

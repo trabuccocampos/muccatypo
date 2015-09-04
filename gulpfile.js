@@ -2,7 +2,7 @@
 /**
 *
 * npm install gulp
-* npm install --save-dev browser-sync gulp-plumber gulp-sass gulp-sourcemaps gulp-autoprefixer gulp-util gulp-rename gulp-shell gulp-concat gulp-filter gulp-watch gulp-size minimist
+* npm install --save-dev browser-sync gulp-plumber gulp-sass gulp-sourcemaps gulp-autoprefixer gulp-util gulp-rename gulp-shell gulp-concat gulp-filter gulp-flatten gulp-watch gulp-size minimist
 *
 * Navigate to your project directory and run: gulp --url "https://your-shop.myshopify.com/?key=xxx"
 *
@@ -20,6 +20,7 @@ var filter        = require('gulp-filter');
 var concat        = require('gulp-concat');
 var rename        = require('gulp-rename');
 var watch         = require('gulp-watch');
+var flatten       = require('gulp-flatten');
 var size          = require('gulp-size');
 
 var minimist    = require('minimist');
@@ -44,12 +45,15 @@ gulp.task('serve', function() {
     injectChanges: false, // cause of css being served from cdn
   });
 ;
-  gulp.watch("./sass/**/*.scss", ['sass']);
+  gulp.watch([
+    './sass/**/*.scss',
+    './assets/timber.scss.liquid'
+  ], ['sass']);
 });
 
 // Compile sass into CSS & auto-inject into browsers
 gulp.task('sass-pre', function() {
-  return gulp.src("./sass/*.scss")
+  return gulp.src("./dev/sass/*.scss")
     .pipe(plumber(function(error) {
         gutil.log(gutil.colors.red(error.message));
         gutil.beep();
@@ -84,6 +88,24 @@ gulp.task('sass', ['sass-pre'], function() {
     .pipe(browserSync.stream());
 });
 
+
+gulp.task('copy-fonts', function () {
+  return gulp.src('./dev/fonts/**/*')
+      .pipe(flatten())
+      .pipe(gulp.dest('./assets'))
+      .pipe(size())
+      .pipe(shell([
+          'theme upload <%= f(file.path) %>'
+      ], {
+        templateData: {
+          f: function (s) {
+            // cut away absolute path of working dir for 'theme' cmd to work
+            return s.replace(process.cwd() + '/', '')
+          }
+        }
+      }))
+      .pipe(browserSync.stream());
+});
 
 gulp.task('liquid', function() {
   return gulp.src('**/*.liquid')
